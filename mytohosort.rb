@@ -6,6 +6,7 @@ noecho
 curs_set(0)
 stdscr.keypad = true
 @sorted = 0
+@counter = 0
 @last = nil
 
 def ask(a, b)
@@ -31,6 +32,7 @@ def insert(elem, array, b, e)
     if ask(elem, array[center]).nil?
         undo(array)
         insert(@last, array, 0, @sorted)
+        @last = nil
     elsif !ask(elem, array[center])
         insert(elem, array, center+1, e)
     elsif ask(elem, array[center])
@@ -40,10 +42,9 @@ def insert(elem, array, b, e)
 end
     
 def undo(array)
-    if @sorted > 0
+    unless @last.nil?
         array.delete(@last)
         @sorted -= 1
-        @last = nil
     end
 end
         

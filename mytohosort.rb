@@ -6,6 +6,7 @@ noecho
 curs_set(0)
 stdscr.keypad = true
 @sorted = 0
+@last = nil
 
 def ask(a, b)
     @screen.clear
@@ -13,8 +14,8 @@ def ask(a, b)
     setpos(lines/2, cols/2-a.length-'    '.length/2)
     @screen.addstr(str)
     answer = @screen.getch
-    return true if answer == Key::LEFT
-    return false if answer == Key::RIGHT
+    return true, @last = a if answer == Key::LEFT
+    return false, @last = b if answer == Key::RIGHT
     return nil if answer == Key::BACKSPACE
     ask(a, b)
 end
@@ -23,12 +24,13 @@ def insert(elem, array, b, e)
     num = e - b
     if num == 0
         array.insert(b, elem)
+        @sorted += 1
         return
     end
     center = (b + e) / 2
     if ask(elem, array[center]).nil?
-        undo(elem, array)
-        insert(elem, array, 0, @sorted)
+        undo(array)
+        insert(@last, array, 0, @sorted)
     elsif !ask(elem, array[center])
         insert(elem, array, center+1, e)
     elsif ask(elem, array[center])
@@ -37,10 +39,11 @@ def insert(elem, array, b, e)
     @sorted += 1
 end
     
-def undo(elem, array)
+def undo(array)
     if @sorted > 0
-        array.delete(elem)
+        array.delete(@last)
         @sorted -= 1
+        @last = nil
     end
 end
         

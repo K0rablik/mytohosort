@@ -8,13 +8,18 @@ def ask(a, b)
     puts str
     answer = gets.chomp
     if answer == '1'
-        
         @last = a 
+        @sorted += 1
         return true
-        
     elsif answer == '2'
-    return false, @last = b if answer == '2' 
-    return nil if answer == 'back' 
+        @last = b
+        @sorted += 1
+        return false
+    elsif answer.nil?
+        @last = nil
+        @sorted -= 1
+        return nil
+    end
     ask(a, b)
 end
     
@@ -22,14 +27,12 @@ def insert(elem, array, b, e)
     num = e - b
     if num == 0
         array.insert(b, elem)
-        @sorted += 1
         return
     end
     center = (b + e) / 2
     if ask(elem, array[center])[0].nil?
         undo(array)
         insert(@last, array, 0, @sorted)
-        @last = nil
     elsif !ask(elem, array[center])[0]
         insert(elem, array, center+1, e)
     elsif ask(elem, array[center])[0]
@@ -40,7 +43,6 @@ end
 def undo(array)
     unless @last.nil?
         array.delete(@last)
-        @sorted -= 1
     end
 end
         

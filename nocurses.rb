@@ -1,23 +1,20 @@
-require "curses"
-include Curses
-
-@screen = init_screen
-noecho
-curs_set(0)
-stdscr.keypad = true
 @sorted = 0
 @counter = 0
 @last = nil
 
 def ask(a, b)
-    @screen.clear
+    puts "@last = #{@last}"
     str = a.to_s + '    ' + b.to_s
-    setpos(lines/2, cols/2-a.length-'    '.length/2)
-    @screen.addstr(str)
-    answer = @screen.getch
-    return true, @last = a if answer == Key::LEFT
-    return false, @last = b if answer == Key::RIGHT
-    return nil, @last = nil if answer == Key::BACKSPACE
+    puts str
+    answer = gets.chomp
+    if answer == '1'
+        
+        @last = a 
+        return true
+        
+    elsif answer == '2'
+    return false, @last = b if answer == '2' 
+    return nil if answer == 'back' 
     ask(a, b)
 end
     
@@ -32,12 +29,12 @@ def insert(elem, array, b, e)
     if ask(elem, array[center])[0].nil?
         undo(array)
         insert(@last, array, 0, @sorted)
+        @last = nil
     elsif !ask(elem, array[center])[0]
         insert(elem, array, center+1, e)
     elsif ask(elem, array[center])[0]
         insert(elem, array, b, center)
     end
-    @sorted += 1
 end
     
 def undo(array)
@@ -51,12 +48,8 @@ ttosort = Dir.entries('touhous')
 ttosort.delete_if { |i| i =~ /\.+/}
 tsorted = []
 
-begin
-    while @sorted < ttosort.length-1
-        insert(ttosort[@sorted], tsorted, 0, @sorted)
-    end
-ensure
-    close_screen
+while @sorted < ttosort.length-1
+    insert(ttosort[@sorted], tsorted, 0, @sorted)
 end
     
 tsorted.each_index { |i| puts "#{i+1}.#{tsorted[i]}"}

@@ -11,7 +11,7 @@ stdscr.keypad = true
 
 def ask(a, b)
     @screen.clear
-    str = a + '    ' + b
+    str = a.to_s + '    ' + b.to_s
     setpos(lines/2, cols/2-a.length-'    '.length/2)
     @screen.addstr(str)
     answer = @screen.getch

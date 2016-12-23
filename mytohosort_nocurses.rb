@@ -19,11 +19,13 @@ def insert(elem, array, b, e)
     end
     center = (b + e)/2
     puts @last
-    if ask(elem, array[center])[0] == true
-        insert(elem, array, b, center)
-    elsif ask(elem, array[center])[0] == false
-        insert(elem, array, center+1, e)
-    elsif ask(elem, array[center]).nil?
+    unless (answer = ask(elem, array[center])).nil?
+        if answer[0]
+            insert(elem, array, b, center)
+        else
+            insert(elem, array, center+1, e)
+        end
+    else
         array.delete(@last)
         @sorted -= 1
         insert(@last, array, 0, @sorted)

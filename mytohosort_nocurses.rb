@@ -7,7 +7,7 @@ def ask(a, b)
     answer = gets.chomp
     return true, @last = a if answer == '1' 
     return false, @last = b if answer == '2'
-    return nil if answer == 'q'
+    return nil if answer == 'q' && !@last.nil?
     ask(a, b)
 end
     
@@ -28,8 +28,9 @@ def insert(elem, array, b, e)
     else
         array.delete(@last)
         @sorted -= 1
-        insert(@last, array, 0, @sorted)
+        last = @last
         @last = nil
+        insert(last, array, 0, @sorted)
     end
 end
     

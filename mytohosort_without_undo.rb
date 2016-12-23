@@ -5,7 +5,6 @@ include Curses
 noecho
 curs_set(0)
 stdscr.keypad = true
-@sorted = 0
 
 def ask(a, b)
     @screen.clear
@@ -22,26 +21,25 @@ def insert(elem, array, b, e)
     num = e - b
     if num == 0
         array.insert(b, elem) 
-        @sorted += 1
         return
     end
     center = (b + e)/2
     if ask(elem, array[center])
         insert(elem, array, b, center)
-        @sorted += 1
-    else ask(elem, array[center])
+    else
         insert(elem, array, center+1, e)
-        @sorted += 1        
     end
 end
     
 ttosort = Dir.entries('touhous')
 ttosort.delete_if { |i| i =~ /\.+/ }
 tsorted = []
+sorted = 0
 
 begin
-    while @sorted <= ttosort.length-1 
-        insert(ttosort[@sorted], tsorted, 0, @sorted)
+    while sorted <= ttosort.length-1 
+        insert(ttosort[sorted], tsorted, 0, sorted)
+        sorted += 1
     end
 ensure
     close_screen
